@@ -1,5 +1,7 @@
 import express from "express"
 import cors from "cors"
+import authRoutes from "./routes/auth.routes.js";
+
 
 const app = express()
 
@@ -9,5 +11,7 @@ app.use(express.json())
 app.get("/", (req, res) => {
   res.json({ message: "API rodando 🚀" })
 })
+
+app.use("/auth", authRoutes);
 
 export default app
