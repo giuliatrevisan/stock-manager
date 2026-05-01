@@ -46,13 +46,13 @@ export const login = async ({ email, password }) => {
   });
 
   if (!user) {
-    throw new AppError("INVALID_CREDENTIALS", 401);
+    throw new AppError("INVALID_EMAIL", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new AppError("INVALID_CREDENTIALS", 401);
+    throw new AppError("INVALID_PASSWORD", 401);
   }
 
   const token = jwt.sign(
@@ -66,7 +66,14 @@ export const login = async ({ email, password }) => {
     }
   );
 
-  return { token };
+  return {
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+  };
 };
 
 /**
