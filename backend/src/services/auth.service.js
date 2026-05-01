@@ -1,6 +1,7 @@
 import { prisma } from "../lib/prisma.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { AppError } from "../errors/appError.js";
 
 /**
  * REGISTER USER
@@ -13,7 +14,7 @@ export const register = async ({ email, password }) => {
   });
 
   if (existingUser) {
-    throw new Error("EMAIL_ALREADY_EXISTS");
+    throw new AppError("EMAIL_ALREADY_EXISTS", 409);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -22,7 +23,7 @@ export const register = async ({ email, password }) => {
     data: {
       email: normalizedEmail,
       password: hashedPassword,
-      role: "user", // 👈 importante garantir role padrão
+      role: "user",
     },
   });
 
@@ -45,20 +46,19 @@ export const login = async ({ email, password }) => {
   });
 
   if (!user) {
-    throw new Error("INVALID_CREDENTIALS");
+    throw new AppError("INVALID_CREDENTIALS", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new Error("INVALID_CREDENTIALS");
+    throw new AppError("INVALID_CREDENTIALS", 401);
   }
 
-  // JWT com ROLE
   const token = jwt.sign(
     {
       userId: user.id,
-      role: user.role, 
+      role: user.role,
     },
     process.env.JWT_SECRET,
     {
@@ -66,11 +66,12 @@ export const login = async ({ email, password }) => {
     }
   );
 
-  return {
-    token,
-  };
+  return { token };
 };
 
+/**
+ * REGISTER ADMIN
+ */
 export const registerAdmin = async ({ email, password }) => {
   const normalizedEmail = email.toLowerCase();
 
@@ -79,7 +80,7 @@ export const registerAdmin = async ({ email, password }) => {
   });
 
   if (existingUser) {
-    throw new Error("EMAIL_ALREADY_EXISTS");
+    throw new AppError("EMAIL_ALREADY_EXISTS", 409);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -88,7 +89,7 @@ export const registerAdmin = async ({ email, password }) => {
     data: {
       email: normalizedEmail,
       password: hashedPassword,
-      role: "admin", 
+      role: "admin",
     },
   });
 

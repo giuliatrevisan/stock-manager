@@ -43,7 +43,7 @@ export const createProduct = async ({ name, sku, stock, active }) => {
 };
 
 /**
- * LIST PRODUCTS (PAGINATED)
+ * LIST PRODUCTS
  */
 export const listProducts = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
@@ -57,7 +57,6 @@ export const listProducts = async ({ page = 1, limit = 10 }) => {
       take: limit,
       orderBy: { createdAt: "desc" },
     }),
-
     prisma.product.count({ where }),
   ]);
 
@@ -86,7 +85,7 @@ export const getProductById = async (id) => {
 };
 
 /**
- * UPDATE PRODUCT
+ * UPDATE
  */
 export const updateProduct = async (id, data) => {
   const product = await prisma.product.findUnique({ where: { id } });
@@ -126,7 +125,7 @@ export const updateProduct = async (id, data) => {
 };
 
 /**
- * DELETE PRODUCT (SOFT DELETE)
+ * DELETE (SOFT DELETE)
  */
 export const deleteProduct = async (id) => {
   const product = await prisma.product.findUnique({ where: { id } });
