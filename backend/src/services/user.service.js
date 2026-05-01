@@ -1,7 +1,8 @@
 import { prisma } from "../lib/prisma.js";
+import { AppError } from "../errors/appError.js";
 
 /**
- * LIST USERS (com filtro por role opcional)
+ * LIST USERS
  */
 export const listUsers = async ({ role } = {}) => {
   return prisma.user.findMany({
@@ -19,7 +20,7 @@ export const listUsers = async ({ role } = {}) => {
  * GET USER BY ID
  */
 export const getUserById = async (id) => {
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id },
     select: {
       id: true,
@@ -28,4 +29,10 @@ export const getUserById = async (id) => {
       createdAt: true,
     },
   });
+
+  if (!user) {
+    throw new AppError("USER_NOT_FOUND", 404);
+  }
+
+  return user;
 };

@@ -7,6 +7,9 @@ import productRoutes from "./routes/product.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import userRoutes from "./routes/user.routes.js";
 
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger.js";
+
 const app = express();
 
 app.use(cors());
@@ -26,3 +29,5 @@ app.listen(3000, () => {
 });
 
 app.use("/users", userRoutes);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
