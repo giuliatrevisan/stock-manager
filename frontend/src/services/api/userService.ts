@@ -5,56 +5,58 @@ type UserForm = {
   email: string;
   password?: string;
   role: "admin" | "user";
-};
 
-type UsersResponse = {
-  items: User[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
+  name?: string;
+  phone?: string;
+  position?: string;
+  department?: string;
 };
 
 // =========================
 // LIST USERS (PAGINADO)
 // =========================
-export const getUsers = (
-  page: number,
-  pageSize: number,
-  role?: string
-) => {
-  return api.get<UsersResponse>("/users", {
+export const getUsers = (page: number, pageSize: number, role?: string) => {
+  return api.get<{
+    items: User[];
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  }>("/users", {
     params: {
       page,
       pageSize,
-      ...(role && role !== "all" && { role }),
+      ...(role && role !== "all" ? { role } : {}),
     },
   });
 };
 
 // =========================
-// DELETE USER
+// DELETE USER (FALTAVA ISSO)
 // =========================
 export const deleteUser = (id: string) => {
-  return api.delete<void>(`/users/${id}`);
+  return api.delete(`/users/${id}`);
 };
 
 // =========================
 // UPDATE USER
 // =========================
-export const updateUser = (
-  id: string,
-  data: Partial<Pick<UserForm, "email" | "role">>
-) => {
+export const updateUser = (id: string, data: Partial<UserForm>) => {
   return api.put<User>(`/users/${id}`, data);
 };
-
 // =========================
 // CREATE USER
 // =========================
 export const createUser = (data: UserForm) => {
-  return api.post<User>("/auth/register", {
+  return api.post("/auth/register", {
     email: data.email,
     password: data.password,
   });
+};
+
+// =========================
+// GET USER BY ID
+// =========================
+export const getUserById = (id: string) => {
+  return api.get<User>(`/users/${id}`);
 };

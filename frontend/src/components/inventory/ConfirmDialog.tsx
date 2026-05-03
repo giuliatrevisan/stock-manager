@@ -10,14 +10,13 @@ import { useState } from "react";
 
 import { AlertTriangle } from "lucide-react";
 import { Toast } from "../feedback/Toast";
+import { theme } from "../../styles/theme";
 
 type Props = {
   open: boolean;
   title?: string;
   description?: string;
-
   onConfirm: () => Promise<void>;
-
   onClose: () => void;
 };
 
@@ -50,8 +49,6 @@ export default function ConfirmDialog({
 
       onClose();
     } catch (err) {
-      console.error(err);
-
       setToast({
         open: true,
         message: "Erro ao executar ação",
@@ -72,10 +69,10 @@ export default function ConfirmDialog({
         slotProps={{
           paper: {
             sx: {
-              borderRadius: 4,
-              background: "#FFFFFF",
-              padding: 2,
-              boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+              borderRadius: 3,
+              p: 2,
+              background: theme.colors.surface,
+              boxShadow: "0 10px 30px rgba(0,0,0,0.12)",
             },
           },
         }}
@@ -91,6 +88,7 @@ export default function ConfirmDialog({
               py: 1,
             }}
           >
+            {/* ICON */}
             <Box
               sx={{
                 width: 56,
@@ -106,18 +104,38 @@ export default function ConfirmDialog({
               <AlertTriangle size={26} color="#EF4444" />
             </Box>
 
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+            {/* TITLE */}
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: "18px",
+                color: theme.colors.text.primary,
+              }}
+            >
               {title}
             </Typography>
 
-            <Typography variant="body2" color="#64748B">
+            {/* DESCRIPTION */}
+            <Typography
+              sx={{
+                fontSize: "14px",
+                color: theme.colors.text.muted,
+              }}
+            >
               {description}
             </Typography>
           </Box>
         </DialogContent>
 
-        <DialogActions sx={{ justifyContent: "center", pb: 2 }}>
-          <Button onClick={onClose} disabled={loading}>
+        <DialogActions sx={{ justifyContent: "center", pb: 2, gap: 1 }}>
+          <Button
+            onClick={onClose}
+            disabled={loading}
+            sx={{
+              color: theme.colors.text.muted,
+              textTransform: "none",
+            }}
+          >
             Cancelar
           </Button>
 
@@ -125,14 +143,19 @@ export default function ConfirmDialog({
             onClick={handleConfirm}
             disabled={loading}
             variant="contained"
-            sx={{ background: "#EF4444" }}
+            sx={{
+              background: "#EF4444",
+              textTransform: "none",
+              "&:hover": {
+                background: "#dc2626",
+              },
+            }}
           >
             {loading ? "Excluindo..." : "Excluir"}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/*  TOAST */}
       <Toast
         toast={toast}
         onClose={() => setToast({ ...toast, open: false })}

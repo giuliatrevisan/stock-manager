@@ -19,6 +19,12 @@ export const listUsers = async ({ role, page = 1, pageSize = 10 } = {}) => {
       id: true,
       email: true,
       role: true,
+      name: true,
+      phone: true,
+      avatarUrl: true,
+      position: true,
+      department: true,
+      isActive: true,
       createdAt: true,
     },
     orderBy: {
@@ -45,6 +51,12 @@ export const getUserById = async (id) => {
       id: true,
       email: true,
       role: true,
+      name: true,
+      phone: true,
+      avatarUrl: true,
+      position: true,
+      department: true,
+      isActive: true,
       createdAt: true,
     },
   });
@@ -73,9 +85,18 @@ export const updateUser = async (id, data, currentUser) => {
     throw new AppError("FORBIDDEN", 403);
   }
 
+  // 🔒 aqui entra o allowedFields
+  const allowedFields = {
+    name: data.name,
+    phone: data.phone,
+    avatarUrl: data.avatarUrl,
+    position: data.position,
+    department: data.department,
+  };
+
   return prisma.user.update({
     where: { id },
-    data,
+    data: allowedFields,
   });
 };
 /**

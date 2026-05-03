@@ -18,17 +18,23 @@ import {
   cancelStyle,
   saveStyle,
 } from "../../styles/formStyles";
+import { formatPhone } from "../../utils/format/formatPhone";
 
 type UserForm = {
   email: string;
   password: string;
   role: "admin" | "user";
+
+  name?: string;
+  phone?: string;
+  position?: string;
+  department?: string;
 };
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: UserForm) => void; // 🔥 FIX PRINCIPAL
+  onSubmit: (data: UserForm) => void;
   form: UserForm;
   setForm: (v: UserForm) => void;
   isEdit?: boolean;
@@ -49,23 +55,21 @@ export default function CreateUserModal({
 }: Props) {
   const [errors, setErrors] = useState<UserFormErrors>({});
 
-  // 🔥 limpa erros ao abrir/fechar
   useEffect(() => {
     if (!open) setErrors({});
   }, [open]);
 
-  // 🔥 validação melhorada
   const validate = () => {
     const newErrors: UserFormErrors = {};
 
-    if (!form.email.trim()) {
+    if (!form.email?.trim()) {
       newErrors.email = "Email é obrigatório";
     } else if (!form.email.includes("@")) {
       newErrors.email = "Email inválido";
     }
 
     if (!isEdit) {
-      if (!form.password.trim()) {
+      if (!form.password?.trim()) {
         newErrors.password = "Senha é obrigatória";
       } else if (form.password.length < 6) {
         newErrors.password = "Senha deve ter no mínimo 6 caracteres";
@@ -76,11 +80,13 @@ export default function CreateUserModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  // 🔥 submit correto
   const handleSubmit = () => {
     if (!validate()) return;
-
     onSubmit(form);
+  };
+
+  const updateField = (field: keyof UserForm, value: string) => {
+    setForm({ ...form, [field]: value });
   };
 
   return (
@@ -114,7 +120,14 @@ export default function CreateUserModal({
 
       {/* CONTENT */}
       <DialogContent sx={{ pt: 1 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 2,
+            mt: 1,
+          }}
+        >
           {/* EMAIL */}
           <TextField
             fullWidth
@@ -126,7 +139,7 @@ export default function CreateUserModal({
             }}
             error={!!errors.email}
             helperText={errors.email}
-            sx={inputStyle}
+            sx={{ ...inputStyle, gridColumn: "1 / -1" }}
           />
 
           {/* PASSWORD */}
@@ -142,13 +155,55 @@ export default function CreateUserModal({
               }}
               error={!!errors.password}
               helperText={errors.password}
-              sx={inputStyle}
+              sx={{ ...inputStyle, gridColumn: "1 / -1" }}
             />
           )}
 
-          {/* ROLE SWITCH */}
+          {/* NOME */}
+          <TextField
+            fullWidth
+            label="Nome"
+            value={form.name ?? ""}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            sx={inputStyle}
+          />
+
+          {/* TELEFONE */}
+          <TextField
+            fullWidth
+            label="Telefone"
+            value={form.phone ?? ""}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                phone: formatPhone(e.target.value),
+              })
+            }
+            sx={inputStyle}
+          />
+
+          {/* CARGO */}
+          <TextField
+            fullWidth
+            label="Cargo"
+            value={form.position ?? ""}
+            onChange={(e) => setForm({ ...form, position: e.target.value })}
+            sx={inputStyle}
+          />
+
+          {/* SETOR */}
+          <TextField
+            fullWidth
+            label="Setor"
+            value={form.department ?? ""}
+            onChange={(e) => setForm({ ...form, department: e.target.value })}
+            sx={inputStyle}
+          />
+
+          {/* ROLE SWITCH (ocupa linha inteira) */}
           <Box
             sx={{
+              gridColumn: "1 / -1",
               mt: 1,
               px: 1.5,
               py: 1.5,

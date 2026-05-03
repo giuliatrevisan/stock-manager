@@ -3,7 +3,8 @@ import { jwtDecode } from "jwt-decode"
 type DecodedToken = {
   userId: string
   role: "admin" | "user"
-  exp: number
+  exp: number,
+  email:string;
 }
 
 export function getUserFromToken() {

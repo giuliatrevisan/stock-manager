@@ -37,6 +37,34 @@ export default function UsersTable({
 
   const columns: GridColDef[] = [
     {
+      field: "name",
+      headerName: "Nome",
+      flex: 1,
+      minWidth: 160,
+      renderCell: (params) => (
+        <span style={{ fontWeight: 600 }}>
+          {params.value || "-"}
+        </span>
+      ),
+    },{
+      field: "phone",
+      headerName: "Telefone",
+      width: 160,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "department",
+      headerName: "Setor",
+      width: 140,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "position",
+      headerName: "Cargo",
+      width: 160,
+      renderCell: (params) => params.value || "-",
+    },
+    {
       field: "email",
       headerName: "Email",
       flex: 1,

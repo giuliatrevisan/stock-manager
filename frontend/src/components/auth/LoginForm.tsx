@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input } from "../../../components/ui/Input";
-import { useAuth } from "../../../hooks/useAuth";
+import { Input } from "../ui/Input";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {
   onSwitch: () => void;

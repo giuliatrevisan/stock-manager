@@ -19,6 +19,14 @@ export type User = {
   id: string;
   email: string;
   role: "admin" | "user";
+
+  name?: string;
+  phone?: string;
+  avatarUrl?: string;
+  position?: string;
+  department?: string;
+
+  isActive?: boolean;
   createdAt: string;
 };
 
@@ -26,6 +34,11 @@ type UserForm = {
   email: string;
   password: string;
   role: "admin" | "user";
+
+  name?: string;
+  phone?: string;
+  position?: string;
+  department?: string;
 };
 
 export default function UsersPage() {
@@ -34,15 +47,13 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState("all");
+
   const [toast, setToast] = useState({
     open: false,
     message: "",
     type: "success" as "success" | "error",
   });
 
-  // =========================
-  // PAGINAÇÃO
-  // =========================
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 5,
@@ -57,10 +68,14 @@ export default function UsersPage() {
     email: "",
     password: "",
     role: "user",
+    name: "",
+    phone: "",
+    position: "",
+    department: "",
   });
 
   // =========================
-  // FETCH USERS (SERVER SIDE)
+  // FETCH
   // =========================
   const fetchUsers = async () => {
     try {
@@ -74,16 +89,11 @@ export default function UsersPage() {
 
       setUsers(res.data.items);
       setRowCount(res.data.total);
-    } catch (err) {
-      console.error("Erro ao buscar usuários", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // =========================
-  // REFRESH (role + pagination)
-  // =========================
   useEffect(() => {
     fetchUsers();
   }, [role, paginationModel]);
@@ -98,6 +108,10 @@ export default function UsersPage() {
       email: "",
       password: "",
       role: "user",
+      name: "",
+      phone: "",
+      position: "",
+      department: "",
     });
 
     setOpen(true);
@@ -113,6 +127,10 @@ export default function UsersPage() {
       email: user.email,
       password: "",
       role: user.role,
+      name: user.name ?? "",
+      phone: user.phone ?? "",
+      position: user.position ?? "",
+      department: user.department ?? "",
     });
 
     setOpen(true);
@@ -127,7 +145,7 @@ export default function UsersPage() {
   };
 
   // =========================
-  // SUBMIT (CREATE + EDIT)
+  // SUBMIT
   // =========================
   const handleSubmit = async () => {
     try {
@@ -135,6 +153,10 @@ export default function UsersPage() {
         await updateUser(selectedUser.id, {
           email: form.email,
           role: form.role,
+          name: form.name,
+          phone: form.phone,
+          position: form.position,
+          department: form.department,
         });
 
         setToast({
@@ -153,19 +175,16 @@ export default function UsersPage() {
       }
 
       setOpen(false);
-      await fetchUsers();
+      fetchUsers();
     } catch (err) {
-      console.error("Erro ao salvar usuário", err);
-
       setToast({
         open: true,
         message: "Erro ao salvar usuário",
         type: "error",
       });
-
-      throw err; // 🔥 importante se quiser integrar com modal depois
     }
   };
+
   return (
     <Box sx={{ p: 2 }}>
       <UsersHeader
@@ -193,6 +212,7 @@ export default function UsersPage() {
         setForm={setForm}
         isEdit={!!selectedUser}
       />
+
       <Toast
         toast={toast}
         onClose={() => setToast({ ...toast, open: false })}

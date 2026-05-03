@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { AuthBanner } from "./components/AuthBanner";
-import { LoginForm } from "./components/LoginForm";
-import { RegisterForm } from "./components/RegisterForm";
+import { AuthBanner } from "../../components/auth/AuthBanner";
+import { LoginForm } from "../../components/auth/LoginForm";
+import { RegisterForm } from "../../components/auth/RegisterForm";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "register">("login");

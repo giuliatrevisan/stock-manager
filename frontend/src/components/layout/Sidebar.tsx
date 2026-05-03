@@ -26,7 +26,7 @@ export default function Sidebar({ isOpen, setIsOpen }: Props) {
       path: "/users",
     },
     { label: "Gráficos", icon: BarChart3, path: "/graficos" },
-    { label: "Suporte", icon: MessageCircle, path: "/suporte" },
+    { label: "FAQ's", icon: MessageCircle, path: "/faqs" },
     { label: "Perfil", icon: Settings, path: "/perfil" },
   ].filter(Boolean);
 

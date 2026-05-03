@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-import bg1 from "../../../assets/bg1.jpg";
-import bg2 from "../../../assets/bg2.jpeg";
-import bg3 from "../../../assets/bg3.webp";
+import bg1 from "../../assets/bg1.jpg";
+import bg2 from "../../assets/bg2.jpeg";
+import bg3 from "../../assets/bg3.webp";
 
 const images = [bg1, bg2, bg3];
 
