@@ -9,7 +9,7 @@ import {
   Typography,
   Switch,
 } from "@mui/material";
-import { useState } from "react";
+import { useState,useCallback } from "react";
 import {
   titleStyle,
   subtitleStyle,
@@ -50,32 +50,31 @@ export default function ProductModal({
   onSubmit,
 }: Props) {
   const [errors, setErrors] = useState<ProductFormErrors>({});
-  // 🔥 VALIDAÇÃO
-  const validate = () => {
-    const newErrors: ProductFormErrors = {};
 
+  const validate = useCallback(() => {
+    const newErrors: ProductFormErrors = {};
+  
     if (!form.name.trim()) {
       newErrors.name = "Nome é obrigatório";
     }
-
+  
     if (!form.sku.trim()) {
       newErrors.sku = "SKU é obrigatório";
     }
-
+  
     if (form.stock < 0) {
       newErrors.stock = "Estoque não pode ser negativo";
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [form.name, form.sku, form.stock]);
 
-  // 🔥 SUBMIT CONTROLADO
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (!validate()) return;
-
+  
     onSubmit();
-  };
+  }, [onSubmit, validate]);
 
   return (
     <Dialog

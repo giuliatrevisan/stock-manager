@@ -9,7 +9,7 @@ import {
   Typography,
   Switch,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   titleStyle,
   subtitleStyle,
@@ -59,15 +59,15 @@ export default function CreateUserModal({
     if (!open) setErrors({});
   }, [open]);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const newErrors: UserFormErrors = {};
-
+  
     if (!form.email?.trim()) {
       newErrors.email = "Email é obrigatório";
     } else if (!form.email.includes("@")) {
       newErrors.email = "Email inválido";
     }
-
+  
     if (!isEdit) {
       if (!form.password?.trim()) {
         newErrors.password = "Senha é obrigatória";
@@ -75,11 +75,10 @@ export default function CreateUserModal({
         newErrors.password = "Senha deve ter no mínimo 6 caracteres";
       }
     }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
+  }, [form.email, form.password, isEdit]);
   const handleSubmit = () => {
     if (!validate()) return;
     onSubmit(form);
