@@ -6,6 +6,7 @@ import UsersPage from "../pages/users/usersPage";
 import Layout from "../components/layout/Layout";
 import type { ReactNode } from "react";
 import { AdminRoute } from "./ProtectedRoute";
+import DashboardPage from "../pages/dashboard/DashboardPage";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem("token");
@@ -40,6 +41,15 @@ export default function AppRoutes() {
             <AdminRoute>
               <UsersPage />
             </AdminRoute>
+          }
+        />
+
+          {/* GRÁFICOS  */}
+          <Route
+          path="/graficos"
+          element={
+              <DashboardPage />
+            
           }
         />
       </Route>
