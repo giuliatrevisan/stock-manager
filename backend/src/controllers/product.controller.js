@@ -1,5 +1,4 @@
 import * as productService from "../services/product.service.js";
-
 /**
  * CREATE
  */
@@ -19,17 +18,19 @@ export const getProductById = async (req, res) => {
 /**
  * LIST
  */
-export const listProducts = async (req, res) => {
-  const { page, limit } = req.query;
+export const list = async (req, res) => {
+  const { page, limit, search, status } = req.query;
 
-  const data = await productService.listProducts({
+  const result = await productService.listProducts({
     page: Number(page) || 1,
     limit: Number(limit) || 10,
+    search: search || "",
+    status: status || "active",
+    user: req.user, 
   });
 
-  return res.status(200).json(data);
+  return res.json(result);
 };
-
 /**
  * UPDATE
  */

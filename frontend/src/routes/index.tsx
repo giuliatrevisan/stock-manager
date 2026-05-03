@@ -1,7 +1,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../pages/auth/AuthPage";
-import Home from "../pages/home/home";
+import InventoryPage from "../pages/inventory/inventoryPage";
+import UsersPage from "../pages/users/usersPage";
+
+import Layout from "../components/layout/Layout";
 import type { ReactNode } from "react";
+import { AdminRoute } from "./ProtectedRoute";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem("token");
@@ -10,25 +14,35 @@ function PrivateRoute({ children }: { children: ReactNode }) {
 }
 
 export default function AppRoutes() {
-  const token = localStorage.getItem("token");
-
   return (
     <Routes>
       {/* LOGIN */}
-      <Route
-        path="/login"
-        element={token ? <Navigate to="/" /> : <Login />}
-      />
+      <Route path="/login" element={<Login />} />
 
-      {/* HOME (PROTEGIDA) */}
+      {/* LAYOUT PROTEGIDO (todas áreas logadas) */}
       <Route
-        path="/"
         element={
           <PrivateRoute>
-            <Home />
+            <Layout />
           </PrivateRoute>
         }
-      />
+      >
+        {/* REDIRECT ROOT */}
+        <Route path="/" element={<Navigate to="/estoque" />} />
+
+        {/* ESTOQUE */}
+        <Route path="/estoque" element={<InventoryPage />} />
+
+        {/* USERS (somente admin) */}
+        <Route
+          path="/users"
+          element={
+            <AdminRoute>
+              <UsersPage />
+            </AdminRoute>
+          }
+        />
+      </Route>
     </Routes>
   );
 }
