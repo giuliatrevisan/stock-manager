@@ -17,7 +17,7 @@ import {
   switchStyle,
   cancelStyle,
   saveStyle,
-} from "../../../styles/formStyles";
+} from "../../styles/formStyles";
 
 type ProductForm = {
   name: string;

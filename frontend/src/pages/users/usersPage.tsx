@@ -8,9 +8,9 @@ import {
   deleteUser,
 } from "../../services/api/userService";
 
-import UsersHeader from "./components/UsersHeader";
-import UsersTable from "./components/UsersTable";
-import UserModal from "./components/UserModal";
+import UsersHeader from "../../components/users/UsersHeader";
+import UsersTable from "../../components/users/UsersTable";
+import UserModal from "../../components/users/UserModal";
 import { Toast } from "../../components/feedback/Toast";
 
 import { getUserFromToken } from "../../utils/auth/getUserFromToken";

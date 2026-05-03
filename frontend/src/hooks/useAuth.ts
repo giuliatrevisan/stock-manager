@@ -7,14 +7,14 @@ export function useAuth() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 init
+  //  init
   useEffect(() => {
     const userFromToken = getUserFromToken();
     setUser(userFromToken);
     setLoading(false);
   }, []);
 
-  // 🔐 LOGIN
+  //  LOGIN
   async function login(email: string, password: string) {
     try {
       const response = await api.post("/auth/login", {
@@ -48,7 +48,7 @@ export function useAuth() {
     }
   }
 
-  // 🧾 REGISTER
+  //  REGISTER
   async function register(email: string, password: string) {
     try {
       await api.post("/auth/register", {
@@ -70,7 +70,7 @@ export function useAuth() {
     }
   }
 
-  // 🚪 LOGOUT
+  //  LOGOUT
   function logout(message?: string) {
     localStorage.removeItem("token");
 

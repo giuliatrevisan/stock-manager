@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 
 import { AlertTriangle } from "lucide-react";
-import { Toast } from "../../../components/feedback/Toast";
+import { Toast } from "../feedback/Toast";
 
 type Props = {
   open: boolean;

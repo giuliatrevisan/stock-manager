@@ -1,5 +1,5 @@
 import { Box, Button, Typography, TextField } from "@mui/material";
-import { theme } from "../../../styles/theme";
+import { theme } from "../../styles/theme";
 
 import { FileSpreadsheet, FileDown, Plus } from "lucide-react";
 

@@ -13,9 +13,9 @@ import {
 } from "../../services/api/productService";
 
 import { Box } from "@mui/material";
-import InventoryHeader from "./components/InventoryHeader";
-import ProductTable from "./components/ProductTable";
-import ProductModal from "./components/ProductModal";
+import InventoryHeader from "../../components/inventory/InventoryHeader";
+import ProductTable from "../../components/inventory/ProductTable";
+import ProductModal from "../../components/inventory/ProductModal";
 
 export type Product = {
   id: string;

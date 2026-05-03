@@ -1,9 +1,9 @@
 import { useState } from "react";
 import type { GridColDef } from "@mui/x-data-grid";
 
-import TableBase from "../../../components/table/TableBase";
-import ConfirmDialog from "../../inventory/components/ConfirmDialog";
-import { TableActions } from "../../../components/table/TableActions";
+import TableBase from "../table/TableBase";
+import ConfirmDialog from "../inventory/ConfirmDialog";
+import { TableActions } from "../table/TableActions";
 
 type User = {
   id: string;

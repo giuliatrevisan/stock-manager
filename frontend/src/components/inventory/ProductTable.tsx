@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { GridColDef } from "@mui/x-data-grid";
-import TableBase from "../../../components/table/TableBase";
+import TableBase from "../table/TableBase";
 import ConfirmDialog from "./ConfirmDialog";
-import { TableActions } from "../../../components/table/TableActions";
+import { TableActions } from "../table/TableActions";
 
 type Product = {
   id: string;
