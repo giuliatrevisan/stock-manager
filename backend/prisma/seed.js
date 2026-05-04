@@ -1,5 +1,5 @@
-import { prisma } from "../src/lib/prisma.js";
 import bcrypt from "bcryptjs";
+import { prisma } from "../src/lib/prisma.js";
 
 async function main() {
   const email = "admin@system.com";
@@ -30,7 +30,7 @@ async function main() {
     },
   });
 
-  console.log("✅ Admin padrão criado!");
+  console.log("Admin padrão criado!");
 }
 
 main()
@@ -40,4 +40,4 @@ main()
   })
   .finally(async () => {
     await prisma.$disconnect();
-  });
+  });d
