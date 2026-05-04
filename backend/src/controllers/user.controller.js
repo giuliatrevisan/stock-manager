@@ -4,9 +4,13 @@ import * as userService from "../services/user.service.js";
  * LIST USERS
  */
 export const listUsers = async (req, res) => {
-  const { role } = req.query;
+  const { role, page = 1, pageSize = 10 } = req.query;
 
-  const users = await userService.listUsers({ role });
+  const users = await userService.listUsers({
+    role,
+    page: Number(page),
+    pageSize: Number(pageSize),
+  });
 
   return res.json(users);
 };
@@ -15,7 +19,29 @@ export const listUsers = async (req, res) => {
  * GET USER BY ID
  */
 export const getUserById = async (req, res) => {
-  const user = await userService.getUserById(req.params.id);
+  const user = await userService.getUserById(
+    req.params.id,
+    req.user
+  );
 
   return res.json(user);
+};
+/**
+ * DELETE
+ */
+export const deleteUser = async (req, res) => {
+  await userService.deleteUser(req.params.id, req.user);
+  return res.status(204).send();
+};
+/**
+ * UPDATE
+ */
+export const updateUser = async (req, res) => {
+  const updated = await userService.updateUser(
+    req.params.id,
+    req.body,
+    req.user
+  );
+
+  return res.json(updated);
 };

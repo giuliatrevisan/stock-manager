@@ -45,10 +45,44 @@ export const createProduct = async ({ name, sku, stock, active }) => {
 /**
  * LIST PRODUCTS
  */
-export const listProducts = async ({ page = 1, limit = 10 }) => {
+export const listProducts = async ({
+  page = 1,
+  limit = 10,
+  search = "",
+  status = "active",
+  user,
+}) => {
   const skip = (page - 1) * limit;
+  limit = Math.min(limit, 100);
 
-  const where = { active: true };
+  const isAdmin = user?.role === "admin";
+
+  const where = {
+    ...(isAdmin
+      ? status !== "all" && {
+          active: status === "active",
+        }
+      : {
+          active: true, 
+        }),
+
+    ...(search && {
+      OR: [
+        {
+          name: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+        {
+          sku: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    }),
+  };
 
   const [items, total] = await Promise.all([
     prisma.product.findMany({

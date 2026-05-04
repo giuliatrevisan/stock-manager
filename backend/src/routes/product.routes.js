@@ -117,7 +117,7 @@ router.post(
  */
 router.get(
   "/",
-  asyncHandler(productController.listProducts)
+  asyncHandler(productController.list)
 );
 
 /**

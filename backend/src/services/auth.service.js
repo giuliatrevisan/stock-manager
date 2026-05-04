@@ -4,9 +4,17 @@ import jwt from "jsonwebtoken";
 import { AppError } from "../errors/appError.js";
 
 /**
- * REGISTER USER
+ * BASE: cria usuário genérico
  */
-export const register = async ({ email, password }) => {
+const createUser = async ({
+  email,
+  password,
+  role,
+  name,
+  phone,
+  position,
+  department,
+}) => {
   const normalizedEmail = email.toLowerCase();
 
   const existingUser = await prisma.user.findUnique({
@@ -23,7 +31,11 @@ export const register = async ({ email, password }) => {
     data: {
       email: normalizedEmail,
       password: hashedPassword,
-      role: "user",
+      role,
+      name: name ?? null,
+      phone: phone ?? null,
+      position: position ?? null,
+      department: department ?? null,
     },
   });
 
@@ -31,9 +43,25 @@ export const register = async ({ email, password }) => {
     id: user.id,
     email: user.email,
     role: user.role,
+    name: user.name,
+    phone: user.phone,
+    position: user.position,
+    department: user.department,
     createdAt: user.createdAt,
   };
 };
+
+/**
+ * REGISTER USER (público)
+ */
+export const register = (data) =>
+  createUser({ ...data, role: "user" });
+
+/**
+ * REGISTER ADMIN (protegido)
+ */
+export const registerAdmin = (data) =>
+  createUser({ ...data, role: "admin" });
 
 /**
  * LOGIN USER
@@ -46,13 +74,13 @@ export const login = async ({ email, password }) => {
   });
 
   if (!user) {
-    throw new AppError("INVALID_CREDENTIALS", 401);
+    throw new AppError("INVALID_EMAIL", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new AppError("INVALID_CREDENTIALS", 401);
+    throw new AppError("INVALID_PASSWORD", 401);
   }
 
   const token = jwt.sign(
@@ -66,37 +94,12 @@ export const login = async ({ email, password }) => {
     }
   );
 
-  return { token };
-};
-
-/**
- * REGISTER ADMIN
- */
-export const registerAdmin = async ({ email, password }) => {
-  const normalizedEmail = email.toLowerCase();
-
-  const existingUser = await prisma.user.findUnique({
-    where: { email: normalizedEmail },
-  });
-
-  if (existingUser) {
-    throw new AppError("EMAIL_ALREADY_EXISTS", 409);
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await prisma.user.create({
-    data: {
-      email: normalizedEmail,
-      password: hashedPassword,
-      role: "admin",
-    },
-  });
-
   return {
-    id: user.id,
-    email: user.email,
-    role: user.role,
-    createdAt: user.createdAt,
+    token,
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
   };
 };

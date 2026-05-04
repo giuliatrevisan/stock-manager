@@ -10,6 +10,9 @@ import userRoutes from "./routes/user.routes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./docs/swagger.js";
 
+import dashboardRoutes from "./routes/dashboard.routes.js";
+
+
 const app = express();
 
 app.use(cors());
@@ -31,3 +34,5 @@ app.listen(3000, () => {
 app.use("/users", userRoutes);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/dashboard", dashboardRoutes);
