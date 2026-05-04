@@ -70,8 +70,11 @@ Swagger: http://localhost:3000/docs
 
 ---
 👤 Usuário padrão (seed)
+
 Email: admin@system.com
+
 Senha: 123456
+
 ---
 🔐 Variáveis de ambiente
 Backend (.env)
