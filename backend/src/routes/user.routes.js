@@ -104,8 +104,7 @@ router.get("/", authorize("admin"), userController.listUsers);
  *       403:
  *         description: Sem permissão (apenas admin)
  */
-router.get("/:id", authorize("admin"), userController.getUserById);
-
+router.get("/:id", userController.getUserById);
 /**
  * UPDATE USER
  * @openapi

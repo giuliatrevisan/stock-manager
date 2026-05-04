@@ -1,29 +1,33 @@
-import { jwtDecode } from "jwt-decode"
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 type DecodedToken = {
-  userId: string
-  role: "admin" | "user"
-  exp: number,
-  email:string;
-}
+  userId: string;
+  role: "admin" | "user";
+  exp: number;
+  email: string;
+};
 
-export function getUserFromToken() {
-  const token = localStorage.getItem("token")
+const TOKEN_KEY = "auth_token";
 
-  if (!token) return null
+export function getUserFromToken(tokenParam?: string) {
+  const token = tokenParam || Cookies.get(TOKEN_KEY);
+
+  if (!token) return null;
 
   try {
-    const decoded = jwtDecode<DecodedToken>(token)
+    const decoded = jwtDecode<DecodedToken>(token);
 
-    const isExpired = decoded.exp * 1000 < Date.now()
+    const isExpired = decoded.exp * 1000 < Date.now();
+
     if (isExpired) {
-      localStorage.removeItem("token")
-      return null
+      Cookies.remove(TOKEN_KEY);
+      return null;
     }
 
-    return decoded
+    return decoded;
   } catch {
-    localStorage.removeItem("token")
-    return null
+    Cookies.remove(TOKEN_KEY);
+    return null;
   }
 }

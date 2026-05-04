@@ -10,10 +10,12 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import FaqPage from "../pages/faq/FaqsPage";
 import ProfilePage from "../pages/profile/ProfilePage";
 
-function PrivateRoute({ children }: { children: ReactNode }) {
-  const token = localStorage.getItem("token");
+import { getUserFromToken } from "../utils/auth/getUserFromToken";
 
-  return token ? children : <Navigate to="/login" />;
+function PrivateRoute({ children }: { children: ReactNode }) {
+  const user = getUserFromToken();
+
+  return user ? children : <Navigate to="/login" />;
 }
 
 export default function AppRoutes() {
@@ -22,7 +24,7 @@ export default function AppRoutes() {
       {/* LOGIN */}
       <Route path="/login" element={<Login />} />
 
-      {/* LAYOUT PROTEGIDO (todas áreas logadas) */}
+      {/* LAYOUT PROTEGIDO */}
       <Route
         element={
           <PrivateRoute>
@@ -46,14 +48,14 @@ export default function AppRoutes() {
           }
         />
 
-        {/* GRÁFICOS  */}
+        {/* DASHBOARD */}
         <Route path="/graficos" element={<DashboardPage />} />
 
-        {/* FQAS  */}
+        {/* FAQ */}
         <Route path="/faqs" element={<FaqPage />} />
 
-                {/* Perfil  */}
-                <Route path="/perfil" element={<ProfilePage />} />
+        {/* PERFIL */}
+        <Route path="/perfil" element={<ProfilePage />} />
       </Route>
     </Routes>
   );

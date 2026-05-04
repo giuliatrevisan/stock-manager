@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
+import { motion } from "framer-motion";
 
 import {
   getUsers,
@@ -194,16 +195,21 @@ export default function UsersPage() {
         isAdmin={user?.role === "admin"}
       />
 
-      <UsersTable
-        users={users}
-        loading={loading}
-        paginationModel={paginationModel}
-        rowCount={rowCount}
-        onPaginationChange={setPaginationModel}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
-
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
+      >
+        <UsersTable
+          users={users}
+          loading={loading}
+          paginationModel={paginationModel}
+          rowCount={rowCount}
+          onPaginationChange={setPaginationModel}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </motion.div>
       <UserModal
         open={open}
         onClose={() => setOpen(false)}

@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
+import { getUserFromToken } from "../utils/auth/getUserFromToken";
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem("token");
+  const user = getUserFromToken();
 
-  if (!token) {
+  if (!user) {
     return <Navigate to="/login" />;
   }
 

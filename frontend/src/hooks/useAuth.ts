@@ -2,19 +2,24 @@ import { useState, useEffect } from "react";
 import { api } from "../api/axios";
 import { notify } from "../components/ui/toast";
 import { getUserFromToken } from "../utils/auth/getUserFromToken";
+import { tokenStorage } from "../utils/auth/tokenStorage";
 
 export function useAuth() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  //  init
+  // =========================
+  // INIT
+  // =========================
   useEffect(() => {
     const userFromToken = getUserFromToken();
     setUser(userFromToken);
     setLoading(false);
   }, []);
 
-  //  LOGIN
+  // =========================
+  // LOGIN
+  // =========================
   async function login(email: string, password: string) {
     try {
       const response = await api.post("/auth/login", {
@@ -24,9 +29,9 @@ export function useAuth() {
 
       const token = response.data.token;
 
-      localStorage.setItem("token", token);
+      tokenStorage.set(token);
 
-      const decoded = getUserFromToken();
+      const decoded = getUserFromToken(token);
       setUser(decoded);
 
       notify.success("Login realizado 🚀");
@@ -48,13 +53,20 @@ export function useAuth() {
     }
   }
 
-  //  REGISTER
-  async function register(email: string, password: string) {
+  // =========================
+  // REGISTER
+  // =========================
+  async function register(data: {
+    email: string;
+    password: string;
+    name?: string;
+    phone?: string;
+    position?: string;
+    department?: string;
+    role?: "admin" | "user";
+  }) {
     try {
-      await api.post("/auth/register", {
-        email,
-        password,
-      });
+      await api.post("/auth/register", data);
 
       notify.success("Conta criada 🎉");
       return true;
@@ -70,9 +82,11 @@ export function useAuth() {
     }
   }
 
-  //  LOGOUT
+  // =========================
+  // LOGOUT
+  // =========================
   function logout(message?: string) {
-    localStorage.removeItem("token");
+    tokenStorage.remove();
 
     setUser(null);
 

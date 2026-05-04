@@ -63,8 +63,14 @@ export function RegisterForm({ onSwitch }: Props) {
     }
 
     try {
-      await register(email, password);
-
+      await register({
+        email,
+        password,
+        name,
+        phone,
+        department,
+        position,
+      });
       onSwitch();
     } catch (err: any) {
       console.log("ERRO BACKEND:", err?.response?.data);

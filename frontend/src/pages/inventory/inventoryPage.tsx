@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { getUserFromToken } from "../../utils/auth/getUserFromToken";
 
+import { motion } from "framer-motion";
 
 import {
   getProducts,
@@ -40,7 +41,6 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("active");
-  // 🔥 PAGINAÇÃO CONTROLADA PELO PAI
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 5,
@@ -57,7 +57,6 @@ export default function InventoryPage() {
     active: true,
   });
 
-  // 🔥 FETCH COM PAGE + LIMIT
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -78,7 +77,6 @@ export default function InventoryPage() {
     }
   };
 
-  // 🔥 DISPARA QUANDO PAGINAÇÃO MUDA
   useEffect(() => {
     fetchProducts();
   }, [paginationModel, search, status]);
@@ -104,7 +102,7 @@ export default function InventoryPage() {
       await fetchProducts();
     } catch (err) {
       console.error(err);
-      throw err; 
+      throw err;
     }
   };
 
@@ -147,27 +145,32 @@ export default function InventoryPage() {
         setStatus={setStatus}
         isAdmin={user.role === "admin"}
       />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
+      >
+        <ProductTable
+          products={products}
+          loading={loading}
+          paginationModel={paginationModel}
+          rowCount={rowCount}
+          onPaginationChange={setPaginationModel}
+          onEdit={(p) => {
+            setSelected(p);
 
-      <ProductTable
-        products={products}
-        loading={loading}
-        paginationModel={paginationModel}
-        rowCount={rowCount}
-        onPaginationChange={setPaginationModel}
-        onEdit={(p) => {
-          setSelected(p);
+            setForm({
+              name: p.name,
+              sku: p.sku,
+              stock: p.stock,
+              active: p.active,
+            });
 
-          setForm({
-            name: p.name,
-            sku: p.sku,
-            stock: p.stock,
-            active: p.active,
-          });
-
-          setOpen(true);
-        }}
-        onDelete={handleDelete}
-      />
+            setOpen(true);
+          }}
+          onDelete={handleDelete}
+        />
+      </motion.div>
 
       <ProductModal
         open={open}

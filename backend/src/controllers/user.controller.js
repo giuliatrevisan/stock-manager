@@ -19,11 +19,13 @@ export const listUsers = async (req, res) => {
  * GET USER BY ID
  */
 export const getUserById = async (req, res) => {
-  const user = await userService.getUserById(req.params.id);
+  const user = await userService.getUserById(
+    req.params.id,
+    req.user
+  );
 
   return res.json(user);
 };
-
 /**
  * DELETE
  */

@@ -5,6 +5,8 @@ import { getUserFromToken } from "../../utils/auth/getUserFromToken";
 import { Input } from "../../components/ui/Input";
 import { formatPhone } from "../../utils/format/formatPhone";
 import { notify } from "../../components/ui/toast";
+import { PageTitle } from "../../components/ui/PageTitle";
+import { motion } from "framer-motion";
 
 type FormState = {
   id: string;
@@ -73,8 +75,7 @@ export default function ProfilePage() {
   const validate = () => {
     if (!form.name.trim()) return notify.error("Nome é obrigatório"), false;
     if (!form.email.trim()) return notify.error("Email é obrigatório"), false;
-    if (!form.email.includes("@"))
-      return notify.error("Email inválido"), false;
+    if (!form.email.includes("@")) return notify.error("Email inválido"), false;
 
     if (!form.phone.trim())
       return notify.error("Telefone é obrigatório"), false;
@@ -125,31 +126,25 @@ export default function ProfilePage() {
       style={{ background: theme.colors.background }}
     >
       {/* HEADER */}
-      <div className="mb-6">
-        <h1
-          className="text-2xl font-bold border-l-4 pl-3"
-          style={{
-            color: theme.colors.text.primary,
-            borderColor: theme.colors.accent.blue,
-          }}
-        >
-          Meu Perfil
-        </h1>
-
-        <p className="text-sm mt-2" style={{ color: theme.colors.text.muted }}>
-          Gerencie suas informações pessoais e credenciais de acesso.
-        </p>
-      </div>
+      <PageTitle
+        title="Meu Perfil"
+        subtitle="Gerencie suas informações pessoais e credenciais de acesso."
+      />
 
       {/* LAYOUT */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        {" "}
         {/* PROFILE CARD */}
-        <div
-          className="rounded-xl p-6 border flex flex-col items-center text-center"
-          style={{
-            background: theme.colors.surface,
-            borderColor: theme.colors.border,
-          }}
+        <motion.div
+          className="rounded-xl p-6 border bg-white flex flex-col items-center text-center"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
         >
           <img
             src={avatar}
@@ -176,15 +171,13 @@ export default function ProfilePage() {
           >
             {form.position || "Sem cargo"}
           </div>
-        </div>
-
+        </motion.div>
         {/* FORM */}
-        <div
-          className="md:col-span-2 rounded-xl p-6 border space-y-4"
-          style={{
-            background: theme.colors.surface,
-            borderColor: theme.colors.border,
-          }}
+        <motion.div
+          className="md:col-span-2 bg-white rounded-xl p-6 border space-y-4"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
         >
           <Input
             label="Nome"
@@ -239,8 +232,8 @@ export default function ProfilePage() {
           >
             {loading ? "Salvando..." : "Salvar alterações"}
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

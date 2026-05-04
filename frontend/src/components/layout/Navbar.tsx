@@ -12,9 +12,9 @@ export default function Navbar({ setSidebarOpen }: Props) {
       className="
         fixed top-0 left-0
         h-14
-        w-full                /* ✅ mobile */
-        md:ml-64             /* ✅ desktop */
-        md:w-[calc(100%-256px)] /* ✅ desktop */
+        w-full   
+        md:ml-64            
+        md:w-[calc(100%-256px)] 
 
         z-[1000]
         flex items-center justify-between px-4

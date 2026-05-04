@@ -48,9 +48,14 @@ export const updateUser = (id: string, data: Partial<UserForm>) => {
 // CREATE USER
 // =========================
 export const createUser = (data: UserForm) => {
-  return api.post("/auth/register", {
+  return api.post("/auth/register-admin", {
     email: data.email,
     password: data.password,
+    name: data.name,
+    phone: data.phone,
+    position: data.position,
+    department: data.department,
+    role: data.role,
   });
 };
 

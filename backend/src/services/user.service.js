@@ -44,7 +44,7 @@ export const listUsers = async ({ role, page = 1, pageSize = 10 } = {}) => {
 /**
  * GET USER BY ID
  */
-export const getUserById = async (id) => {
+export const getUserById = async (id, currentUser) => {
   const user = await prisma.user.findUnique({
     where: { id },
     select: {
@@ -63,6 +63,13 @@ export const getUserById = async (id) => {
 
   if (!user) {
     throw new AppError("USER_NOT_FOUND", 404);
+  }
+
+  const isAdmin = currentUser?.role === "admin";
+  const isSelf = currentUser?.id === id;
+
+  if (!isAdmin && !isSelf) {
+    throw new AppError("FORBIDDEN", 403);
   }
 
   return user;
@@ -85,7 +92,6 @@ export const updateUser = async (id, data, currentUser) => {
     throw new AppError("FORBIDDEN", 403);
   }
 
-  // 🔒 aqui entra o allowedFields
   const allowedFields = {
     name: data.name,
     phone: data.phone,
@@ -93,6 +99,16 @@ export const updateUser = async (id, data, currentUser) => {
     position: data.position,
     department: data.department,
   };
+
+  // 🔥 role só admin pode alterar
+  if (isAdmin && data.role) {
+    allowedFields.role = data.role;
+  }
+
+  // 🔐 segurança extra: remove undefined (evita sobrescrever com null)
+  Object.keys(allowedFields).forEach(
+    (key) => allowedFields[key] === undefined && delete allowedFields[key]
+  );
 
   return prisma.user.update({
     where: { id },

@@ -32,37 +32,35 @@ export default function Sidebar({ isOpen, setIsOpen }: Props) {
 
   return (
     <>
+      {/* OVERLAY (mobile) */}
       {isOpen && (
         <div
-          className="fixed inset-0 md:hidden z-40"
+          className="fixed inset-0 md:hidden z-[1050]"
           style={{ background: "rgba(15,23,42,0.5)" }}
           onClick={() => setIsOpen(false)}
         />
       )}
 
+      {/* SIDEBAR */}
       <aside
         className={`
-          fixed md:fixed z-50
+          fixed md:fixed z-[9999]
           top-0 left-0 h-screen w-64
           flex flex-col
           transform transition-transform duration-300
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
         style={{
-          background:
-            "linear-gradient(180deg, #0B1B3A 0%, #0F2A5F 100%)",
+          background: "linear-gradient(180deg, #0B1B3A 0%, #0F2A5F 100%)",
           borderRight: "1px solid rgba(255,255,255,0.08)",
         }}
       >
         {/* HEADER */}
         <div className="px-6 py-6 border-b border-white/10">
           <h1 className="text-lg font-semibold text-white">
-            Admin Panel
+            Painel Administrativo
           </h1>
-
-          <p className="text-xs text-blue-200 mt-1">
-            Sistema de gerenciamento
-          </p>
+          <p className="text-xs text-blue-200 mt-1">Sistema de gerenciamento</p>
         </div>
 
         {/* MENU */}
@@ -88,8 +86,7 @@ export default function Sidebar({ isOpen, setIsOpen }: Props) {
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.background =
-                      "rgba(59,130,246,0.12)";
+                    e.currentTarget.style.background = "rgba(59,130,246,0.12)";
                   }
                 }}
                 onMouseLeave={(e) => {

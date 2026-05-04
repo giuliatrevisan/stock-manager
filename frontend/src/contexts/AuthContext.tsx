@@ -1,45 +1,67 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 import { api } from "../api/axios";
+import { getUserFromToken } from "../utils/auth/getUserFromToken";
 
 type User = {
+  userId: string;
   email: string;
   role: "admin" | "user";
 };
 
 type AuthContextType = {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+const TOKEN_KEY = "auth_token";
+
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // INIT (mantém login após refresh)
+  useEffect(() => {
+    const decoded = getUserFromToken();
+    setUser(decoded);
+    setLoading(false);
+  }, []);
+
+  //  LOGIN
   async function login(email: string, password: string) {
-    const response = await api.post("/auth/login", {
-      email,
-      password,
-    });
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-    const token = response.data.token;
+      const token = response.data.token;
 
-    localStorage.setItem("token", token);
+      Cookies.set(TOKEN_KEY, token, {
+        expires: 1, // 1 dia
+        secure: true,
+        sameSite: "strict",
+      });
 
-    // decode simples (sem lib pra manter leve)
-    const payload = JSON.parse(atob(token.split(".")[1]));
+      const decoded = getUserFromToken(token);
+      setUser(decoded);
 
-    setUser({
-      email: payload.email,
-      role: payload.role,
-    });
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
 
+  // LOGOUT
   function logout() {
-    localStorage.removeItem("token");
+    Cookies.remove(TOKEN_KEY);
     setUser(null);
+    window.location.href = "/login";
   }
 
   return (
@@ -49,6 +71,7 @@ export const AuthProvider = ({ children }: any) => {
         login,
         logout,
         isAuthenticated: !!user,
+        loading,
       }}
     >
       {children}
