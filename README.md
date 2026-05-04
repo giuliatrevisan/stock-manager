@@ -99,6 +99,8 @@ SKU único (case-insensitive)
 Estoque não pode ser negativo
 Produtos inativos podem ser filtrados (admin)
 Validações no backend e frontend
+
+
 ---
 🧠 Decisões técnicas
 Arquitetura desacoplada (frontend/backend)
@@ -107,6 +109,7 @@ Axios interceptors para sessão
 Prisma ORM para banco de dados
 Uso estratégico de `useMemo` e `useCallback`
 Componentização reutilizável
+
 ---
 📊 Funcionalidades
 Login e cadastro de usuários
@@ -115,10 +118,12 @@ CRUD de produtos
 Gestão de usuários
 FAQ e suporte
 Perfil de usuário
+
 ---
 📬 Contato
 📧 Email: giuliatrevisan.job@gmail.com
 📱 Telefone: (85) 98233-3175
+
 ---
 🙏 Agradecimento
 Agradeço pela oportunidade e pelo processo seletivo.
