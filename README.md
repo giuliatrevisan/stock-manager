@@ -63,8 +63,11 @@ docker compose up --build
 ```
 Após subir o projeto:
 Frontend: http://localhost:5173
+
 Backend: http://localhost:3000
+
 Swagger: http://localhost:3000/docs
+
 ---
 👤 Usuário padrão (seed)
 Email: admin@system.com
@@ -96,35 +99,38 @@ docker compose up --build
 ---
 📌 Regras de negócio
 SKU único (case-insensitive)
+
 Estoque não pode ser negativo
+
 Produtos inativos podem ser filtrados (admin)
+
 Validações no backend e frontend
 
 
 ---
 🧠 Decisões técnicas
 Arquitetura desacoplada (frontend/backend)
+
 Context API para autenticação
+
 Axios interceptors para sessão
+
 Prisma ORM para banco de dados
+
 Uso estratégico de `useMemo` e `useCallback`
+
 Componentização reutilizável
 
 ---
 📊 Funcionalidades
 Login e cadastro de usuários
+
 Dashboard com gráficos e métricas
+
 CRUD de produtos
+
 Gestão de usuários
+
 FAQ e suporte
+
 Perfil de usuário
-
----
-📬 Contato
-📧 Email: giuliatrevisan.job@gmail.com
-📱 Telefone: (85) 98233-3175
-
----
-🙏 Agradecimento
-Agradeço pela oportunidade e pelo processo seletivo.
-Tenho muito interesse em fazer parte da equipe do Radar Saúde.
