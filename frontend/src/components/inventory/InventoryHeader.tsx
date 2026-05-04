@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, MenuItem, TextField } from "@mui/material";
 import { motion } from "framer-motion";
 import { FileSpreadsheet, FileDown, Plus } from "lucide-react";
 import { PageTitle } from "../ui/PageTitle";
@@ -59,9 +59,9 @@ export default function InventoryHeader({
                 onChange={(e) => setStatus(e.target.value)}
                 sx={{ width: 180 }}
               >
-                <option value="active">Ativos</option>
-                <option value="inactive">Inativos</option>
-                <option value="all">Todos</option>
+                <MenuItem value="active">Ativos</MenuItem>
+                <MenuItem value="inactive">Inativos</MenuItem>
+                <MenuItem value="all">Todos</MenuItem>
               </TextField>
             )}
           </Box>

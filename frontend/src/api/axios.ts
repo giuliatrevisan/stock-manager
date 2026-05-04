@@ -5,7 +5,9 @@ import { logout } from "../utils/auth/auth";
 const TOKEN_KEY = "auth_token";
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  // baseURL: import.meta.env.VITE_API_URL,
+    baseURL: "http://localhost:3000",
+
 });
 
 api.interceptors.request.use((config) => {

@@ -2,8 +2,13 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../src/lib/prisma.js";
 
 async function main() {
-  const email = "admin@system.com";
-  const password = "123456";
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  const name = process.env.ADMIN_NAME || "Administrador";
+
+  if (!email || !password) {
+    throw new Error("ADMIN_EMAIL e ADMIN_PASSWORD devem estar definidos no .env");
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -11,7 +16,7 @@ async function main() {
     where: { email },
     update: {
       role: "admin",
-      name: "Administrador do Sistema",
+      name,
       phone: "(91) 99999-9999",
       position: "CEO",
       department: "TI",
@@ -21,7 +26,7 @@ async function main() {
       email,
       password: hashedPassword,
       role: "admin",
-      name: "Administrador do Sistema",
+      name,
       phone: "(91) 99999-9999",
       position: "CEO",
       department: "TI",

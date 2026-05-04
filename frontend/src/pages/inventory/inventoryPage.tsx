@@ -88,11 +88,12 @@ export default function InventoryPage() {
       } else {
         await createProduct(form);
       }
-
+  
       setOpen(false);
       fetchProducts();
     } catch (err) {
       console.error(err);
+      throw err; 
     }
   };
 

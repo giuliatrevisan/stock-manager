@@ -9,7 +9,7 @@ import {
   Typography,
   Switch,
 } from "@mui/material";
-import { useState,useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   titleStyle,
   subtitleStyle,
@@ -32,7 +32,7 @@ type Props = {
   form: ProductForm;
   setForm: (v: ProductForm) => void;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void>; // 🔥 agora é async
 };
 
 type ProductFormErrors = {
@@ -50,36 +50,59 @@ export default function ProductModal({
   onSubmit,
 }: Props) {
   const [errors, setErrors] = useState<ProductFormErrors>({});
+  const [loading, setLoading] = useState(false);
 
   const validate = useCallback(() => {
     const newErrors: ProductFormErrors = {};
-  
+
     if (!form.name.trim()) {
       newErrors.name = "Nome é obrigatório";
     }
-  
+
     if (!form.sku.trim()) {
       newErrors.sku = "SKU é obrigatório";
     }
-  
+
     if (form.stock < 0) {
       newErrors.stock = "Estoque não pode ser negativo";
     }
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }, [form.name, form.sku, form.stock]);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!validate()) return;
-  
-    onSubmit();
+
+    try {
+      setLoading(true);
+
+      await onSubmit();
+
+      // limpa erros se sucesso
+      setErrors({});
+    } catch (err: any) {
+      const message = err?.response?.data?.message;
+
+      if (message === "SKU_ALREADY_EXISTS") {
+        setErrors((prev) => ({
+          ...prev,
+          sku: "Este SKU já está cadastrado",
+        }));
+        return;
+      }
+
+      // fallback genérico
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }, [onSubmit, validate]);
 
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={loading ? undefined : onClose}
       fullWidth
       maxWidth="sm"
       slotProps={{
@@ -153,7 +176,6 @@ export default function ProductModal({
             onChange={(e) => {
               const value = e.target.value;
 
-              // 🔥 impede valores inválidos
               if (value === "") {
                 setForm({ ...form, stock: 0 });
                 return;
@@ -170,64 +192,73 @@ export default function ProductModal({
             helperText={errors.stock}
             sx={inputStyle}
           />
-          {/* ACTIVE SWITCH */}
-          <Box
-            sx={{
-              mt: 1,
-              px: 1.5,
-              py: 1.5,
-              borderRadius: 2,
 
-              background: form.active ? "#EFF6FF" : "#F1F5F9",
-              border: form.active ? "1px solid #BFDBFE" : "1px solid #CBD5E1",
+          {/* ACTIVE SWITCH (só edição) */}
+          {selected && (
+            <Box
+              sx={{
+                mt: 1,
+                px: 1.5,
+                py: 1.5,
+                borderRadius: 2,
+                background: form.active ? "#EFF6FF" : "#F1F5F9",
+                border: form.active
+                  ? "1px solid #BFDBFE"
+                  : "1px solid #CBD5E1",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                transition: "all 0.25s ease",
+              }}
+            >
+              <Box>
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: form.active ? "#1D4ED8" : "#64748B",
+                  }}
+                >
+                  {form.active ? "Produto ativo" : "Produto inativo"}
+                </Typography>
 
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    color: "#64748B",
+                  }}
+                >
+                  {form.active
+                    ? "Produto visível no sistema"
+                    : "Produto oculto no sistema"}
+                </Typography>
+              </Box>
 
-              transition: "all 0.25s ease",
-            }}
-          >
-            <Box>
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  fontWeight: 600,
-                  color: form.active ? "#1D4ED8" : "#64748B",
-                }}
-              >
-                {form.active ? "Produto ativo" : "Produto inativo"}
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontSize: "12px",
-                  color: "#64748B",
-                }}
-              >
-                {form.active
-                  ? "Produto visível no sistema"
-                  : "Produto oculto no sistema"}
-              </Typography>
+              <Switch
+                checked={form.active}
+                onChange={(e) =>
+                  setForm({ ...form, active: e.target.checked })
+                }
+                sx={switchStyle}
+              />
             </Box>
-
-            <Switch
-              checked={form.active}
-              onChange={(e) => setForm({ ...form, active: e.target.checked })}
-              sx={switchStyle}
-            />
-          </Box>
+          )}
         </Box>
       </DialogContent>
 
       {/* ACTIONS */}
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} sx={cancelStyle}>
+        <Button onClick={onClose} disabled={loading} sx={cancelStyle}>
           Cancelar
         </Button>
 
-        <Button variant="contained" onClick={handleSubmit} sx={saveStyle}>
-          Salvar produto
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={loading}
+          sx={saveStyle}
+        >
+          {loading ? "Salvando..." : "Salvar produto"}
         </Button>
       </DialogActions>
     </Dialog>
